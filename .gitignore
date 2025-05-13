@@ -37,6 +37,7 @@ install_manifest.txt
 *.tmp
 *.bak
 *.txt
+!CMakeLists.txt
 
 # ========= 其他常见忽略 =========
 .DS_Store
