@@ -1,0 +1,43 @@
+# ========= 编译输出与中间文件 =========
+*.o
+*.obj
+*.lo
+*.a
+*.lib
+*.so
+*.so.*
+*.dll
+*.dylib
+
+# ========= 构建系统 =========
+/build/*
+!build/
+!build/.gitkeep  # 推荐：作为空目录占位
+
+# ========= CMake 生成文件 =========
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+install_manifest.txt
+
+# ========= 编辑器与 IDE 配置文件 =========
+*.swp
+*.swo
+*~
+*.user
+*.workspace
+*.sublime-workspace
+*.sublime-project
+.idea/
+.vscode/
+
+# ========= 日志与临时文件 =========
+*.log
+*.tmp
+*.bak
+*.txt
+
+# ========= 其他常见忽略 =========
+.DS_Store
+Thumbs.db
