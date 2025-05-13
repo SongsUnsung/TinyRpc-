@@ -10,7 +10,6 @@
 *.dylib
 
 # ========= 构建系统 =========
-/build/*
 !build/
 !build/.gitkeep  # 推荐：作为空目录占位
 
