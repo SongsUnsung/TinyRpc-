@@ -2,6 +2,7 @@
 #include "mprpcapplication.h"
 #include "rpcheader.pb.h"                
 #include <iostream>    
+#include "zookeeperutil.h"
 // 用于框架内部发布服务：将一个服务对象（继承自 protobuf 的 Service）注册进来
 void RpcProvider::NotifyService(google::protobuf::Service *service)
 {
@@ -67,6 +68,25 @@ void RpcProvider::Run()
 
     // 设置工作线程数量（多线程处理 RPC 请求）
     server.setThreadNum(4);
+
+    ZkClient zkCli;
+    zkCli.Start();
+    //service_name为永久性节点 method_name为临时性节点
+    for(auto &sp:m_serviceMap)
+    {
+        std::string service_path="/"+sp.first;
+        zkCli.Create(service_path.c_str(),nullptr,0);
+        for(auto &mp:sp.second.m_methodMap)
+        {
+            //service_name/method_name  /UserServiceRpc/Login 
+            std::string method_path=service_path+"/"+mp.first;
+            char method_path_data[128]={0};
+            sprintf(method_path_data,"%s:%d",ip.c_str(),port);
+            //ZOO_EPHEMERAL表示znode是临时性节点
+            zkCli.Create(method_path.c_str(),method_path_data,strlen(method_path_data),ZOO_EPHEMERAL);
+        }
+    }
+
 
     // 启动 RPC 服务的信息打印
     std::cout << "RpcProvider start service at ip: " << ip << " port: " << port << std::endl;
