@@ -1,8 +1,8 @@
 #include<iostream>
 #include<string>
 #include "friend.pb.h"
-#include "mprpcapplication.h" 
-#include "rpcprovider.h"
+#include "mprpc_application.h" 
+#include "rpc_provider.h"
 #include<vector>
 #include"logger.h"
 
