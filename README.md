@@ -81,3 +81,6 @@ zk的原生开发API（c/c++接口）
 zookeeper-3.4.10/src/c$ sudo ./configure 
 zookeeper-3.4.10/src/c$ sudo make 
 zookeeper-3.4.10/src/c$ sudo make install
+
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/SongsUnsung/TinyRpc-)
