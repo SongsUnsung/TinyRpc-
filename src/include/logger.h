@@ -4,7 +4,9 @@
 #include <string>
 #include <memory>
 #include <functional>
-
+#include <fstream>
+#include <mutex>
+#include <atomic>
 // 扩展日志级别
 enum LogLevel
 {
@@ -15,13 +17,19 @@ enum LogLevel
     FATAL   // 新增致命错误级别
 };
 
+    struct LogItem {
+    std::chrono::system_clock::time_point timestamp;
+    LogLevel level;
+    std::string message;
+};
+
 class Logger
 {
 public:
     static Logger& GetInstance();
     
     // 设置日志输出回调函数
-    void SetOutputCallback(std::function<void(const std::string&)> cb);
+    void SetOutputCallback(std::function<void(const LogItem&)> cb);
     
     // 设置全局日志级别过滤器
     void SetGlobalLevel(LogLevel level);
@@ -39,14 +47,21 @@ public:
     bool IsLevelEnabled(LogLevel level) const;
 
 private:
-    LogLevel m_globalLevel;
-    LockQueue<std::string> m_lckQue;
-    bool m_running;
-    std::function<void(const std::string&)> m_outputCallback;
+    std::ofstream m_currentFile;
+    std::string m_currentDate;
+    std::mutex m_fileMutex;
+
+
+
+     std::atomic<LogLevel> m_globalLevel;
+    LockQueue<LogItem> m_lckQue;
+    std::atomic<bool> m_running;
+    std::function<void(const LogItem&)> m_outputCallback;
     std::shared_ptr<std::thread> m_logThread;
     
     // 私有构造函数
     Logger();
+    ~Logger();
     
     // 删除拷贝构造和移动构造
     Logger(const Logger&) = delete;
@@ -56,6 +71,8 @@ private:
     
     // 写日志线程的实际执行函数
     void WriteLogTask();
+    std::string GetCurrentDateString(std::chrono::system_clock::time_point tp) const;
+
 };
 
 // 改进的宏定义，更简洁、更统一
